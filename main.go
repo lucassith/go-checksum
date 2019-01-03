@@ -96,7 +96,7 @@ func main() {
 }
 
 func isExecutable(path string) bool {
-	return path == executable || filepath.Clean(path) == filepath.Clean(filepath.Base(executable))
+	return path == executable
 }
 
 func calculateChecksum(filepath string) (string, error) {
