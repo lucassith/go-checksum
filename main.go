@@ -32,8 +32,8 @@ func init() {
 
 func main() {
 	files := make([]string, 0)
-	for _, arg := range os.Args {
-		if arg == executable {
+	for _, arg := range os.Args[1:] {
+		if isExecutable(arg) {
 			continue
 		}
 		if stat, err := os.Stat(arg); err == nil && !stat.IsDir() {
@@ -72,7 +72,6 @@ func main() {
 
 	for _, filepath := range files {
 		go func(filepath string) {
-			defer wg.Done()
 			checksum, err := calculateChecksum(filepath)
 			var msg bytes.Buffer
 			if err != nil {
@@ -90,9 +89,14 @@ func main() {
 
 	go func() {
 		for checksum := range checksumsChan {
-			fmt.Fprintf(output, "%s\n", checksum)
+			fmt.Fprintln(output, checksum)
+			wg.Done()
 		}
 	}()
+}
+
+func isExecutable(path string) bool {
+	return path == executable || filepath.Clean(path) == filepath.Clean(filepath.Base(executable))
 }
 
 func calculateChecksum(filepath string) (string, error) {
