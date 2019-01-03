@@ -70,8 +70,6 @@ func main() {
 	var wg sync.WaitGroup
 	defer wg.Wait()
 
-	wg.Add(len(files))
-
 	for _, filepath := range files {
 		go func(filepath string) {
 			defer wg.Done()
@@ -87,6 +85,7 @@ func main() {
 			}
 			checksumsChan <- msg.String()
 		}(filepath)
+		wg.Add(1)
 	}
 
 	go func() {
