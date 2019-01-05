@@ -31,7 +31,7 @@ Available commands:
 ./main {file1} {file2} {file3} ...
 ```
 
-### To output to console
+#### To output to console
 
 ```
 ./main -c {file1} {file2} {file3} ...
